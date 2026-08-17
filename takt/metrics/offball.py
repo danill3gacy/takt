@@ -23,10 +23,14 @@ from .common import (
 from .registry import metric
 
 
-@metric("off_ball_runs", "Забегания без мяча", "Движение без мяча",
-        requires=(C.OFF_BALL_RUNS,),
-        note="Забегание засчитывается, когда игрок открывается под передачу "
-             "партнёра с мячом. «Использовано» — партнёр отдал именно туда.")
+@metric(
+    "off_ball_runs",
+    "Забегания без мяча",
+    "Движение без мяча",
+    requires=(C.OFF_BALL_RUNS,),
+    note="Забегание засчитывается, когда игрок открывается под передачу "
+    "партнёра с мячом. «Использовано» — партнёр отдал именно туда.",
+)
 def off_ball_runs_metric(ms: MatchSet) -> dict:
     ev = ms.events()
     tid = ms.subject_team.id
@@ -39,31 +43,46 @@ def off_ball_runs_metric(ms: MatchSet) -> dict:
     for k, g in runs.groupby("subtype"):
         targeted = g["targeted"].fillna(False)
         received = g["received"].fillna(False)
-        rows.append({
-            "kind": RUN_RU.get(k, k),
-            "raw": k,
-            "n": int(len(g)),
-            "per_match": round(len(g) / n_matches, 1),
-            "share": round(100 * len(g) / len(runs), 1),
-            "used": round(100 * float(targeted.mean()), 1),
-            "received": round(100 * float(received.mean()), 1),
-            "dangerous": round(100 * float(g["dangerous"].fillna(False).mean()), 1)
-            if "dangerous" in g else None,
-            "distance": round(float(g["distance_covered"].dropna().mean()), 1)
-            if "distance_covered" in g else None,
-            "speed": round(float(g["speed_avg"].dropna().mean()), 1)
-            if "speed_avg" in g else None,
-        })
+        rows.append(
+            {
+                "kind": RUN_RU.get(k, k),
+                "raw": k,
+                "n": int(len(g)),
+                "per_match": round(len(g) / n_matches, 1),
+                "share": round(100 * len(g) / len(runs), 1),
+                "used": round(100 * float(targeted.mean()), 1),
+                "received": round(100 * float(received.mean()), 1),
+                "dangerous": round(100 * float(g["dangerous"].fillna(False).mean()), 1)
+                if "dangerous" in g
+                else None,
+                "distance": round(float(g["distance_covered"].dropna().mean()), 1)
+                if "distance_covered" in g
+                else None,
+                "speed": round(float(g["speed_avg"].dropna().mean()), 1)
+                if "speed_avg" in g
+                else None,
+            }
+        )
     rows.sort(key=lambda r: -r["n"])
 
     behind = runs[runs["subtype"] == "behind"]
-    breaking = runs[runs["break_defensive_line"] == True] if "break_defensive_line" in runs else runs.iloc[0:0]  # noqa: E712
-    pushing = runs[runs["push_defensive_line"] == True] if "push_defensive_line" in runs else runs.iloc[0:0]  # noqa: E712
+    breaking = (
+        runs[runs["break_defensive_line"] == True]  # noqa: E712 — сравнение с NA-safe True
+        if "break_defensive_line" in runs
+        else runs.iloc[0:0]
+    )
+    pushing = (
+        runs[runs["push_defensive_line"] == True]  # noqa: E712 — сравнение с NA-safe True
+        if "push_defensive_line" in runs
+        else runs.iloc[0:0]
+    )
 
-    by_player = (runs.groupby("player_name")
-                 .agg(n=("event_id", "size"),
-                      used=("targeted", lambda s: 100 * s.fillna(False).mean()))
-                 .sort_values("n", ascending=False).head(10))
+    by_player = (
+        runs.groupby("player_name")
+        .agg(n=("event_id", "size"), used=("targeted", lambda s: 100 * s.fillna(False).mean()))
+        .sort_values("n", ascending=False)
+        .head(10)
+    )
 
     sep = runs["separation_gain"].dropna() if "separation_gain" in runs else pd.Series(dtype=float)
     return {
@@ -74,24 +93,36 @@ def off_ball_runs_metric(ms: MatchSet) -> dict:
         "behind": int(len(behind)),
         "behind_per_match": round(len(behind) / n_matches, 1),
         "behind_used": round(100 * float(behind["targeted"].fillna(False).mean()), 1)
-        if len(behind) else None,
+        if len(behind)
+        else None,
         "break_line": int(len(breaking)),
         "push_line": int(len(pushing)),
         "mean_separation_gain": round(float(sep.mean()), 2) if len(sep) else None,
-        "top_players": [{"name": k, "n": int(r["n"]), "used": round(float(r["used"]), 1)}
-                        for k, r in by_player.iterrows()],
-        "clips": episodes(behind.sort_values("t"),
-                          lambda r: f"Забегание за спину — {r['player_name']}, {r.get('phase','')}", 30),
+        "top_players": [
+            {"name": k, "n": int(r["n"]), "used": round(float(r["used"]), 1)}
+            for k, r in by_player.iterrows()
+        ],
+        "clips": episodes(
+            behind.sort_values("t"),
+            lambda r: f"Забегание за спину — {r['player_name']}, {r.get('phase', '')}",
+            30,
+        ),
         "clips_all": episodes(
             runs[runs["dangerous"] == True].sort_values("t"),  # noqa: E712
-            lambda r: f"{RUN_RU.get(r['subtype'], r['subtype'])} — {r['player_name']}", 30),
+            lambda r: f"{RUN_RU.get(r['subtype'], r['subtype'])} — {r['player_name']}",
+            30,
+        ),
     }
 
 
-@metric("passing_options", "Варианты передачи", "Движение без мяча",
-        requires=(C.PASSING_OPTIONS,),
-        note="Сколько открытых партнёров у игрока с мячом и как часто команда "
-             "выбирает самый опасный из доступных.")
+@metric(
+    "passing_options",
+    "Варианты передачи",
+    "Движение без мяча",
+    requires=(C.PASSING_OPTIONS,),
+    note="Сколько открытых партнёров у игрока с мячом и как часто команда "
+    "выбирает самый опасный из доступных.",
+)
 def passing_options_metric(ms: MatchSet) -> dict:
     ev = ms.events()
     tid = ms.subject_team.id
@@ -117,10 +148,16 @@ def passing_options_metric(ms: MatchSet) -> dict:
         "dangerous_taken": round(100 * float(dang_taken), 1) if dang_taken is not None else None,
         "safe_taken": round(100 * float(safe_taken), 1) if safe_taken is not None else None,
         "n_options": int(len(opts)),
-        "channels": share(opts[opts["targeted"] == True]["channel_start"].map(CHANNEL_RU),  # noqa: E712
-                          [CHANNEL_RU[c] for c in CHANNEL_ORDER]),
+        "channels": share(
+            opts[opts["targeted"] == True]["channel_start"].map(CHANNEL_RU),  # noqa: E712
+            [CHANNEL_RU[c] for c in CHANNEL_ORDER],
+        ),
         "clips": episodes(
             dangerous[dangerous["targeted"] != True].nlargest(30, "xthreat"),  # noqa: E712
-            lambda r: f"Открыт опасный вариант, передача не туда — {r['player_name']}, "
-                      f"xT {float(r['xthreat'] or 0):.3f}", 30),
+            lambda r: (
+                f"Открыт опасный вариант, передача не туда — {r['player_name']}, "
+                f"xT {float(r['xthreat'] or 0):.3f}"
+            ),
+            30,
+        ),
     }

@@ -21,7 +21,7 @@ from .sources.skillcorner import SkillCornerSource
 SOURCES = {"skillcorner": SkillCornerSource}
 
 
-def main(argv=None) -> int:
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="takt")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
@@ -59,8 +59,13 @@ def main(argv=None) -> int:
     print(f"бенчмарк: {baseline.n_teams} команд, {baseline.n_matches} матчей")
 
     date = args.date or dt.date.today().strftime("%d.%m.%Y")
-    rep = build_report(MatchSet(team, subject), baseline,
-                       club=args.club, club_short=args.club_short, generated=date)
+    rep = build_report(
+        MatchSet(team, subject),
+        baseline,
+        club=args.club,
+        club_short=args.club_short,
+        generated=date,
+    )
     out = render_html(rep, args.out)
     print(f"тезисов: {len(rep.insights)}, паттернов: {len(rep.patterns)}")
     print(f"готово: {Path(out).resolve()}")

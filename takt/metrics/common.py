@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 import pandas as pd
 
@@ -70,6 +72,7 @@ SET_PIECE_RU = {
 # Срезы
 # --------------------------------------------------------------------------- #
 
+
 def on_ball(ev: pd.DataFrame, team_id: int) -> pd.DataFrame:
     """Владения мячом игроками команды."""
     return ev[(ev["type"] == "player_possession") & (ev["possession_team_id"] == team_id)]
@@ -96,9 +99,15 @@ def opponent_on_ball(ev: pd.DataFrame, team_id: int) -> pd.DataFrame:
 # Зоны
 # --------------------------------------------------------------------------- #
 
-def zone_grid(df: pd.DataFrame, value: str | None = None,
-              nx: int = 6, ny: int = 5,
-              length: float = 105.0, width: float = 68.0) -> np.ndarray:
+
+def zone_grid(
+    df: pd.DataFrame,
+    value: str | None = None,
+    nx: int = 6,
+    ny: int = 5,
+    length: float = 105.0,
+    width: float = 68.0,
+) -> np.ndarray:
     """Сетка nx×ny: сумма value (или количество) по зонам поля."""
     if df.empty:
         return np.zeros((ny, nx))
@@ -131,45 +140,54 @@ def share(series: pd.Series, order: list[str] | None = None) -> list[dict]:
 # Эпизоды (клипы)
 # --------------------------------------------------------------------------- #
 
-def episodes(df: pd.DataFrame, title_fn=None, limit: int = 40) -> list[dict]:
+
+def episodes(
+    df: pd.DataFrame, title_fn: Callable[..., str] | None = None, limit: int = 40
+) -> list[dict]:
     """Превратить строки событий в список клипов с тайм-кодами."""
     out = []
     for _, r in df.head(limit).iterrows():
         t = float(r.get("t", 0) or 0)
-        out.append({
-            "match_id": str(r.get("match_id", "")),
-            "match": str(r.get("match_label", "")),
-            "minute": int(r["minute"]) + 1 if pd.notna(r.get("minute")) else 0,
-            "clock": f"{int(r['minute']) + 1}′" if pd.notna(r.get("minute")) else "",
-            "t": round(t, 1),
-            "timecode": f"{int(t // 60):02d}:{int(t % 60):02d}",
-            "frame": int(r["frame"]) if pd.notna(r.get("frame")) else 0,
-            "player": str(r.get("player_name") or ""),
-            "phase": str(r.get("phase") or ""),
-            "def_phase": str(r.get("def_phase") or ""),
-            "title": title_fn(r) if title_fn else "",
-        })
+        out.append(
+            {
+                "match_id": str(r.get("match_id", "")),
+                "match": str(r.get("match_label", "")),
+                "minute": int(r["minute"]) + 1 if pd.notna(r.get("minute")) else 0,
+                "clock": f"{int(r['minute']) + 1}′" if pd.notna(r.get("minute")) else "",
+                "t": round(t, 1),
+                "timecode": f"{int(t // 60):02d}:{int(t % 60):02d}",
+                "frame": int(r["frame"]) if pd.notna(r.get("frame")) else 0,
+                "player": str(r.get("player_name") or ""),
+                "phase": str(r.get("phase") or ""),
+                "def_phase": str(r.get("def_phase") or ""),
+                "title": title_fn(r) if title_fn else "",
+            }
+        )
     return out
 
 
-def phase_episodes(df: pd.DataFrame, title_fn=None, limit: int = 30) -> list[dict]:
+def phase_episodes(
+    df: pd.DataFrame, title_fn: Callable[..., str] | None = None, limit: int = 30
+) -> list[dict]:
     """Клипы из таблицы фаз (у фазы есть кадр начала и длительность)."""
     out = []
     for _, r in df.head(limit).iterrows():
         t = float(r.get("t", 0) or 0)
-        out.append({
-            "match_id": str(r.get("match_id", "")),
-            "match": str(r.get("match_label", "")),
-            "minute": int(r["minute"]) + 1 if pd.notna(r.get("minute")) else 0,
-            "clock": f"{int(r['minute']) + 1}\u2032" if pd.notna(r.get("minute")) else "",
-            "t": round(t, 1),
-            "timecode": f"{int(t // 60):02d}:{int(t % 60):02d}",
-            "frame": int(r["frame"]) if pd.notna(r.get("frame")) else 0,
-            "player": "",
-            "phase": str(r.get("phase") or ""),
-            "def_phase": str(r.get("def_phase") or ""),
-            "title": title_fn(r) if title_fn else "",
-        })
+        out.append(
+            {
+                "match_id": str(r.get("match_id", "")),
+                "match": str(r.get("match_label", "")),
+                "minute": int(r["minute"]) + 1 if pd.notna(r.get("minute")) else 0,
+                "clock": f"{int(r['minute']) + 1}\u2032" if pd.notna(r.get("minute")) else "",
+                "t": round(t, 1),
+                "timecode": f"{int(t // 60):02d}:{int(t % 60):02d}",
+                "frame": int(r["frame"]) if pd.notna(r.get("frame")) else 0,
+                "player": "",
+                "phase": str(r.get("phase") or ""),
+                "def_phase": str(r.get("def_phase") or ""),
+                "title": title_fn(r) if title_fn else "",
+            }
+        )
     return out
 
 
@@ -177,7 +195,7 @@ def per90(n: float, minutes: float) -> float:
     return round(n / minutes * 90, 2) if minutes else 0.0
 
 
-def league_baseline(all_sets: list[MatchSet], fn) -> float:
+def league_baseline(all_sets: list[MatchSet], fn: Callable[[MatchSet], float]) -> float:
     """Среднее по всем командам датасета — контекст «много это или мало»."""
     vals = [fn(s) for s in all_sets]
     vals = [v for v in vals if v is not None and not (isinstance(v, float) and np.isnan(v))]

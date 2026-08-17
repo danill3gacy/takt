@@ -25,14 +25,18 @@ class MetricSpec:
     note: str = ""
 
 
+MetricFn = Callable[[MatchSet], Any]
+
 REGISTRY: dict[str, MetricSpec] = {}
 
 
-def metric(key: str, title: str, section: str,
-           requires: tuple[Capability, ...] = (), note: str = ""):
-    def deco(fn):
+def metric(
+    key: str, title: str, section: str, requires: tuple[Capability, ...] = (), note: str = ""
+) -> Callable[[MetricFn], MetricFn]:
+    def deco(fn: MetricFn) -> MetricFn:
         REGISTRY[key] = MetricSpec(key, title, section, requires, fn, note)
         return fn
+
     return deco
 
 
@@ -45,7 +49,7 @@ class Computed:
     def __getitem__(self, key: str) -> Any:
         return self.values[key]
 
-    def get(self, key: str, default=None) -> Any:
+    def get(self, key: str, default: Any = None) -> Any:
         return self.values.get(key, default)
 
 

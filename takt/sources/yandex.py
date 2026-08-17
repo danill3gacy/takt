@@ -66,8 +66,12 @@ class LeagueFeedSource(Source):
     # а не поломка.
     capabilities: frozenset[Capability] = frozenset()
 
-    def __init__(self, base_url: str | None = None, token: str | None = None,
-                 cache_dir: str | Path = "data/league_cache"):
+    def __init__(
+        self,
+        base_url: str | None = None,
+        token: str | None = None,
+        cache_dir: str | Path = "data/league_cache",
+    ):
         self.base_url = base_url or os.getenv("LEAGUE_FEED_URL", "")
         self.token = token or os.getenv("LEAGUE_FEED_TOKEN", "")
         self.cache = Path(cache_dir)

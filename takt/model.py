@@ -31,17 +31,17 @@ class Capability(str, Enum):
     вместо того, чтобы молча вернуть неверное число.
     """
 
-    EVENTS = "events"                      # события с мячом
-    TRACKING = "tracking"                  # сырые кадры координат
-    PHASES = "phases"                      # разметка фаз игры
-    OFF_BALL_RUNS = "off_ball_runs"        # забегания без мяча
-    PRESSING_CHAINS = "pressing_chains"    # цепочки прессинга
-    LINE_BREAKS = "line_breaks"            # взломы линий обороны
-    PASSING_OPTIONS = "passing_options"    # варианты передачи в момент владения
-    XTHREAT = "xthreat"                    # модельная оценка угрозы
-    TEAM_SHAPE = "team_shape"              # ширина/длина блока
-    DEFENSIVE_LINE = "defensive_line"      # высота последней линии
-    SPEEDS = "speeds"                      # скорости игроков
+    EVENTS = "events"  # события с мячом
+    TRACKING = "tracking"  # сырые кадры координат
+    PHASES = "phases"  # разметка фаз игры
+    OFF_BALL_RUNS = "off_ball_runs"  # забегания без мяча
+    PRESSING_CHAINS = "pressing_chains"  # цепочки прессинга
+    LINE_BREAKS = "line_breaks"  # взломы линий обороны
+    PASSING_OPTIONS = "passing_options"  # варианты передачи в момент владения
+    XTHREAT = "xthreat"  # модельная оценка угрозы
+    TEAM_SHAPE = "team_shape"  # ширина/длина блока
+    DEFENSIVE_LINE = "defensive_line"  # высота последней линии
+    SPEEDS = "speeds"  # скорости игроков
 
 
 _THIRD_FLIP = {

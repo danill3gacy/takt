@@ -26,63 +26,125 @@ FPS = 10.0
 # метрики просто не считаются.
 RICH_COLUMNS = {
     Capability.XTHREAT: [
-        "xthreat", "xpass_completion", "xshot_player_possession_start",
-        "xshot_player_possession_end", "xshot_player_possession_max",
-        "xloss_player_possession_start", "xloss_player_possession_max",
-        "player_targeted_xthreat", "player_targeted_xpass_completion",
+        "xthreat",
+        "xpass_completion",
+        "xshot_player_possession_start",
+        "xshot_player_possession_end",
+        "xshot_player_possession_max",
+        "xloss_player_possession_start",
+        "xloss_player_possession_max",
+        "player_targeted_xthreat",
+        "player_targeted_xpass_completion",
     ],
     Capability.LINE_BREAKS: [
-        "first_line_break", "second_last_line_break", "last_line_break",
-        "furthest_line_break", "furthest_line_break_type",
-        "n_defensive_lines", "organised_defense", "defensive_structure",
+        "first_line_break",
+        "second_last_line_break",
+        "last_line_break",
+        "furthest_line_break",
+        "furthest_line_break_type",
+        "n_defensive_lines",
+        "organised_defense",
+        "defensive_structure",
         "n_opponents_bypassed",
     ],
     Capability.PRESSING_CHAINS: [
-        "pressing_chain", "pressing_chain_length", "pressing_chain_end_type",
-        "pressing_chain_index", "index_in_pressing_chain",
-        "interplayer_distance", "interplayer_distance_min",
-        "angle_of_engagement", "goal_side_start", "goal_side_end",
-        "beaten_by_possession", "beaten_by_movement",
-        "stop_possession_danger", "reduce_possession_danger", "force_backward",
-        "possession_danger", "simultaneous_defensive_engagement_same_target",
+        "pressing_chain",
+        "pressing_chain_length",
+        "pressing_chain_end_type",
+        "pressing_chain_index",
+        "index_in_pressing_chain",
+        "interplayer_distance",
+        "interplayer_distance_min",
+        "angle_of_engagement",
+        "goal_side_start",
+        "goal_side_end",
+        "beaten_by_possession",
+        "beaten_by_movement",
+        "stop_possession_danger",
+        "reduce_possession_danger",
+        "force_backward",
+        "possession_danger",
+        "simultaneous_defensive_engagement_same_target",
     ],
     Capability.OFF_BALL_RUNS: [
-        "distance_covered", "trajectory_direction", "in_to_out", "out_to_in",
-        "separation_start", "separation_end", "separation_gain",
-        "delta_to_last_defensive_line_start", "delta_to_last_defensive_line_end",
-        "inside_defensive_shape_start", "inside_defensive_shape_end",
-        "targeted", "received", "received_in_space", "dangerous",
-        "intended_run_behind", "push_defensive_line", "break_defensive_line",
-        "give_and_go", "n_simultaneous_runs",
+        "distance_covered",
+        "trajectory_direction",
+        "in_to_out",
+        "out_to_in",
+        "separation_start",
+        "separation_end",
+        "separation_gain",
+        "delta_to_last_defensive_line_start",
+        "delta_to_last_defensive_line_end",
+        "inside_defensive_shape_start",
+        "inside_defensive_shape_end",
+        "targeted",
+        "received",
+        "received_in_space",
+        "dangerous",
+        "intended_run_behind",
+        "push_defensive_line",
+        "break_defensive_line",
+        "give_and_go",
+        "n_simultaneous_runs",
     ],
     Capability.PASSING_OPTIONS: [
-        "n_passing_options", "n_off_ball_runs", "n_passing_options_line_break",
-        "n_passing_options_ahead", "n_passing_options_dangerous_difficult",
+        "n_passing_options",
+        "n_off_ball_runs",
+        "n_passing_options_line_break",
+        "n_passing_options_ahead",
+        "n_passing_options_dangerous_difficult",
         "n_passing_options_dangerous_not_difficult",
-        "difficult_pass_target", "passing_option_score",
-        "player_targeted_id", "player_targeted_name",
-        "player_targeted_x_reception", "player_targeted_y_reception",
+        "difficult_pass_target",
+        "passing_option_score",
+        "player_targeted_id",
+        "player_targeted_name",
+        "player_targeted_x_reception",
+        "player_targeted_y_reception",
     ],
     Capability.DEFENSIVE_LINE: [
-        "last_defensive_line_x_start", "last_defensive_line_x_end",
-        "last_defensive_line_height_start", "last_defensive_line_height_end",
+        "last_defensive_line_x_start",
+        "last_defensive_line_x_end",
+        "last_defensive_line_height_start",
+        "last_defensive_line_height_end",
     ],
     Capability.SPEEDS: ["speed_avg", "speed_avg_band"],
     Capability.EVENTS: [
-        "start_type", "end_type", "lead_to_shot", "lead_to_goal",
-        "game_state", "team_score", "opponent_team_score",
-        "third_start", "third_end", "channel_start", "channel_end",
-        "penalty_area_start", "penalty_area_end",
-        "pass_distance", "pass_angle", "pass_direction", "pass_ahead",
-        "pass_outcome", "high_pass", "one_touch", "quick_pass", "carry",
-        "is_header", "forward_momentum", "duration",
-        "game_interruption_before", "game_interruption_after",
-        "n_player_possessions_in_phase", "team_possession_loss_in_phase",
+        "start_type",
+        "end_type",
+        "lead_to_shot",
+        "lead_to_goal",
+        "game_state",
+        "team_score",
+        "opponent_team_score",
+        "third_start",
+        "third_end",
+        "channel_start",
+        "channel_end",
+        "penalty_area_start",
+        "penalty_area_end",
+        "pass_distance",
+        "pass_angle",
+        "pass_direction",
+        "pass_ahead",
+        "pass_outcome",
+        "high_pass",
+        "one_touch",
+        "quick_pass",
+        "carry",
+        "is_header",
+        "forward_momentum",
+        "duration",
+        "game_interruption_before",
+        "game_interruption_after",
+        "n_player_possessions_in_phase",
+        "team_possession_loss_in_phase",
         "first_player_possession_in_team_possession",
         "last_player_possession_in_team_possession",
     ],
     Capability.PHASES: [
-        "phase_index", "team_in_possession_phase_type",
+        "phase_index",
+        "team_in_possession_phase_type",
         "team_out_of_possession_phase_type",
     ],
 }
@@ -119,18 +181,20 @@ _DEF_PHASE_RU = {
 
 class SkillCornerSource(Source):
     name = "SkillCorner Game Intelligence"
-    capabilities = frozenset({
-        Capability.EVENTS,
-        Capability.PHASES,
-        Capability.OFF_BALL_RUNS,
-        Capability.PRESSING_CHAINS,
-        Capability.LINE_BREAKS,
-        Capability.PASSING_OPTIONS,
-        Capability.XTHREAT,
-        Capability.TEAM_SHAPE,
-        Capability.DEFENSIVE_LINE,
-        Capability.SPEEDS,
-    })
+    capabilities = frozenset(
+        {
+            Capability.EVENTS,
+            Capability.PHASES,
+            Capability.OFF_BALL_RUNS,
+            Capability.PRESSING_CHAINS,
+            Capability.LINE_BREAKS,
+            Capability.PASSING_OPTIONS,
+            Capability.XTHREAT,
+            Capability.TEAM_SHAPE,
+            Capability.DEFENSIVE_LINE,
+            Capability.SPEEDS,
+        }
+    )
 
     def __init__(self, root: str | Path):
         self.root = Path(root)
@@ -189,7 +253,8 @@ class SkillCornerSource(Source):
             pt = (p.get("playing_time") or {}).get("total") or {}
             players[p["id"]] = Player(
                 id=p["id"],
-                name=p.get("short_name") or f"{p.get('first_name','')} {p.get('last_name','')}".strip(),
+                name=p.get("short_name")
+                or f"{p.get('first_name', '')} {p.get('last_name', '')}".strip(),
                 team_id=p["team_id"],
                 number=p.get("number"),
                 position=(p.get("player_role") or {}).get("acronym"),
@@ -217,29 +282,33 @@ class SkillCornerSource(Source):
 
     # ------------------------------------------------------------------ #
 
-    def _load_events(self, d: Path, match_id, home_id: int, away_id: int) -> pd.DataFrame:
+    def _load_events(
+        self, d: Path, match_id: int | str, home_id: int, away_id: int
+    ) -> pd.DataFrame:
         raw = pd.read_csv(d / f"{match_id}_dynamic_events.csv", low_memory=False)
 
-        df = pd.DataFrame({
-            "event_id": raw["event_id"],
-            "period": raw["period"].astype("Int64"),
-            "minute": raw["minute_start"].astype("Int64"),
-            "second": raw["second_start"].astype("Int64"),
-            "frame": raw["frame_start"].astype("Int64"),
-            "frame_end": raw["frame_end"].astype("Int64"),
-            "team_id": raw["team_id"].astype("Int64"),
-            "player_id": raw["player_id"].astype("Int64"),
-            "player_name": raw["player_name"],
-            "position": raw["player_position"],
-            "type": raw["event_type"],
-            "subtype": raw["event_subtype"],
-            "x": raw["x_start"].astype(float),
-            "y": raw["y_start"].astype(float),
-            "x_end": raw["x_end"].astype(float),
-            "y_end": raw["y_end"].astype(float),
-            "in_possession_player_id": raw["player_in_possession_id"].astype("Int64"),
-            "in_possession_player": raw["player_in_possession_name"],
-        })
+        df = pd.DataFrame(
+            {
+                "event_id": raw["event_id"],
+                "period": raw["period"].astype("Int64"),
+                "minute": raw["minute_start"].astype("Int64"),
+                "second": raw["second_start"].astype("Int64"),
+                "frame": raw["frame_start"].astype("Int64"),
+                "frame_end": raw["frame_end"].astype("Int64"),
+                "team_id": raw["team_id"].astype("Int64"),
+                "player_id": raw["player_id"].astype("Int64"),
+                "player_name": raw["player_name"],
+                "position": raw["player_position"],
+                "type": raw["event_type"],
+                "subtype": raw["event_subtype"],
+                "x": raw["x_start"].astype(float),
+                "y": raw["y_start"].astype(float),
+                "x_end": raw["x_end"].astype(float),
+                "y_end": raw["y_end"].astype(float),
+                "in_possession_player_id": raw["player_in_possession_id"].astype("Int64"),
+                "in_possession_player": raw["player_in_possession_name"],
+            }
+        )
 
         df["t"] = raw["frame_start"].astype(float) / FPS
 
@@ -269,48 +338,57 @@ class SkillCornerSource(Source):
         extra = {}
         if "player_targeted_xthreat" in df.columns and "xthreat" in df.columns:
             extra["xt"] = np.where(
-                df["type"].eq("player_possession"),
-                df["player_targeted_xthreat"], np.nan)
+                df["type"].eq("player_possession"), df["player_targeted_xthreat"], np.nan
+            )
         if "possession_danger" in df.columns:
             extra["danger_faced"] = np.where(
-                df["type"].eq("on_ball_engagement"), df["possession_danger"], np.nan)
+                df["type"].eq("on_ball_engagement"), df["possession_danger"], np.nan
+            )
         if "team_in_possession_phase_type" in df.columns:
-            extra["phase"] = df["team_in_possession_phase_type"].map(_PHASE_RU).fillna(
-                df["team_in_possession_phase_type"])
+            extra["phase"] = (
+                df["team_in_possession_phase_type"]
+                .map(_PHASE_RU)
+                .fillna(df["team_in_possession_phase_type"])
+            )
         if "team_out_of_possession_phase_type" in df.columns:
-            extra["def_phase"] = df["team_out_of_possession_phase_type"].map(_DEF_PHASE_RU).fillna(
-                df["team_out_of_possession_phase_type"])
+            extra["def_phase"] = (
+                df["team_out_of_possession_phase_type"]
+                .map(_DEF_PHASE_RU)
+                .fillna(df["team_out_of_possession_phase_type"])
+            )
         extra["clock"] = (df["minute"].fillna(0).astype(int) + 1).astype(str) + "′"
         df = pd.concat([df, pd.DataFrame(extra, index=df.index)], axis=1)
         return df.sort_values("t").reset_index(drop=True)
 
-    def _load_phases(self, d: Path, match_id) -> pd.DataFrame:
+    def _load_phases(self, d: Path, match_id: int | str) -> pd.DataFrame:
         raw = pd.read_csv(d / f"{match_id}_phases_of_play.csv", low_memory=False)
-        df = pd.DataFrame({
-            "phase_index": raw["index"],
-            "period": raw["period"],
-            "minute": raw["minute_start"],
-            "t": raw["frame_start"].astype(float) / FPS,
-            "frame": raw["frame_start"],
-            "frame_end": raw["frame_end"],
-            "duration": raw["duration"],
-            "team_id": raw["team_in_possession_id"].astype("Int64"),
-            "phase_raw": raw["team_in_possession_phase_type"],
-            "def_phase_raw": raw["team_out_of_possession_phase_type"],
-            "n_possessions": raw["n_player_possessions_in_phase"],
-            "lost": raw["team_possession_loss_in_phase"],
-            "lead_to_shot": raw["team_possession_lead_to_shot"],
-            "lead_to_goal": raw["team_possession_lead_to_goal"],
-            "width_in": raw["team_in_possession_width_end"],
-            "length_in": raw["team_in_possession_length_end"],
-            "width_out": raw["team_out_of_possession_width_end"],
-            "length_out": raw["team_out_of_possession_length_end"],
-            "x_start": raw["x_start"].astype(float),
-            "x_end": raw["x_end"].astype(float),
-            "y_start": raw["y_start"].astype(float),
-            "third_start": raw["third_start"],
-            "third_end": raw["third_end"],
-        })
+        df = pd.DataFrame(
+            {
+                "phase_index": raw["index"],
+                "period": raw["period"],
+                "minute": raw["minute_start"],
+                "t": raw["frame_start"].astype(float) / FPS,
+                "frame": raw["frame_start"],
+                "frame_end": raw["frame_end"],
+                "duration": raw["duration"],
+                "team_id": raw["team_in_possession_id"].astype("Int64"),
+                "phase_raw": raw["team_in_possession_phase_type"],
+                "def_phase_raw": raw["team_out_of_possession_phase_type"],
+                "n_possessions": raw["n_player_possessions_in_phase"],
+                "lost": raw["team_possession_loss_in_phase"],
+                "lead_to_shot": raw["team_possession_lead_to_shot"],
+                "lead_to_goal": raw["team_possession_lead_to_goal"],
+                "width_in": raw["team_in_possession_width_end"],
+                "length_in": raw["team_in_possession_length_end"],
+                "width_out": raw["team_out_of_possession_width_end"],
+                "length_out": raw["team_out_of_possession_length_end"],
+                "x_start": raw["x_start"].astype(float),
+                "x_end": raw["x_end"].astype(float),
+                "y_start": raw["y_start"].astype(float),
+                "third_start": raw["third_start"],
+                "third_end": raw["third_end"],
+            }
+        )
         df["phase"] = df["phase_raw"].map(_PHASE_RU).fillna(df["phase_raw"])
         df["def_phase"] = df["def_phase_raw"].map(_DEF_PHASE_RU).fillna(df["def_phase_raw"])
         return df

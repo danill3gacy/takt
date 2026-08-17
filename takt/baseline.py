@@ -10,7 +10,7 @@ from __future__ import annotations
 import statistics
 from dataclasses import dataclass, field
 
-from .metrics import compute_all
+from .metrics import Computed, compute_all
 from .model import Match, MatchSet, Team
 
 # Что сравниваем с лигой: ключ метрики -> путь к скаляру -> подпись.
@@ -39,7 +39,7 @@ class Baseline:
     """Медиана по всем командам выборки + отдельные значения по каждой."""
 
     median: dict[str, float] = field(default_factory=dict)
-    spread: dict[str, float] = field(default_factory=dict)   # межквартильный размах
+    spread: dict[str, float] = field(default_factory=dict)  # межквартильный размах
     by_team: dict[str, dict[str, float]] = field(default_factory=dict)
     n_teams: int = 0
     n_matches: int = 0
@@ -78,7 +78,7 @@ class Baseline:
         return "на уровне лиги"
 
 
-def _extract(computed, path: tuple[str, str]) -> float | None:
+def _extract(computed: Computed, path: tuple[str, str]) -> float | None:
     block = computed.get(path[0])
     if not isinstance(block, dict):
         return None
@@ -119,8 +119,13 @@ def build_baseline(matches: list[Match], min_matches: int = 1) -> Baseline:
             median[key] = statistics.median(series)
             q = sorted(series)
             lo = statistics.median(q[: len(q) // 2])
-            hi = statistics.median(q[(len(q) + 1) // 2:])
+            hi = statistics.median(q[(len(q) + 1) // 2 :])
             spread[key] = max(hi - lo, 1e-6)
 
-    return Baseline(median=median, spread=spread, by_team=per_team,
-                    n_teams=len(per_team), n_matches=len(matches))
+    return Baseline(
+        median=median,
+        spread=spread,
+        by_team=per_team,
+        n_teams=len(per_team),
+        n_matches=len(matches),
+    )

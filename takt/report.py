@@ -23,43 +23,59 @@ PATTERNS: list[dict] = [
     {
         "id": "high_press",
         "name": "Высокий прессинг на чужой половине",
-        "words": ["высокий прессинг", "прессинг", "давление", "отбор высоко",
-                  "прессинг на чужой", "агрессия", "накрывают"],
+        "words": [
+            "высокий прессинг",
+            "прессинг",
+            "давление",
+            "отбор высоко",
+            "прессинг на чужой",
+            "агрессия",
+            "накрывают",
+        ],
         "hint": "Оборонительное действие выше средней линии",
     },
     {
         "id": "counter_press",
         "name": "Контрпрессинг сразу после потери",
-        "words": ["контрпрессинг", "после потери", "сразу отбор", "5 секунд",
-                  "возврат мяча", "gegenpressing"],
+        "words": [
+            "контрпрессинг",
+            "после потери",
+            "сразу отбор",
+            "5 секунд",
+            "возврат мяча",
+            "gegenpressing",
+        ],
         "hint": "Отбор в первые секунды после потери владения",
     },
     {
         "id": "run_behind",
         "name": "Забегание за спину защитникам",
-        "words": ["за спину", "забегание", "рывок за спину", "в разрез",
-                  "глубина", "убегает"],
+        "words": ["за спину", "забегание", "рывок за спину", "в разрез", "глубина", "убегает"],
         "hint": "Движение без мяча за последнюю линию обороны",
     },
     {
         "id": "line_break",
         "name": "Взлом последней линии обороны",
-        "words": ["взлом", "разрезающая", "передача между линиями", "вскрытие",
-                  "проникающая", "последняя линия"],
+        "words": [
+            "взлом",
+            "разрезающая",
+            "передача между линиями",
+            "вскрытие",
+            "проникающая",
+            "последняя линия",
+        ],
         "hint": "Передача или ведение за последнюю линию",
     },
     {
         "id": "switch",
         "name": "Смена фланга",
-        "words": ["смена фланга", "перевод", "длинный перевод", "с фланга на фланг",
-                  "диагональ"],
+        "words": ["смена фланга", "перевод", "длинный перевод", "с фланга на фланг", "диагональ"],
         "hint": "Передача с поперечным смещением больше 25 метров",
     },
     {
         "id": "loss_own_third",
         "name": "Потеря в своей трети",
-        "words": ["потеря", "потеря сзади", "ошибка при выходе", "обрез",
-                  "потеря в своей трети"],
+        "words": ["потеря", "потеря сзади", "ошибка при выходе", "обрез", "потеря в своей трети"],
         "hint": "Владение потеряно в защитной трети",
     },
     {
@@ -71,15 +87,25 @@ PATTERNS: list[dict] = [
     {
         "id": "low_block",
         "name": "Низкий блок",
-        "words": ["низкий блок", "оборона у своей штрафной", "садятся",
-                  "автобус", "глубокая оборона"],
+        "words": [
+            "низкий блок",
+            "оборона у своей штрафной",
+            "садятся",
+            "автобус",
+            "глубокая оборона",
+        ],
         "hint": "Фаза обороны в низком блоке",
     },
     {
         "id": "quick_break",
         "name": "Быстрый выпад и переход",
-        "words": ["контратака", "быстрый выпад", "переход", "быстрая атака",
-                  "переход из обороны в атаку"],
+        "words": [
+            "контратака",
+            "быстрый выпад",
+            "переход",
+            "быстрая атака",
+            "переход из обороны в атаку",
+        ],
         "hint": "Фаза быстрого перехода в атаку",
     },
     {
@@ -109,54 +135,80 @@ def _build_patterns(ms: MatchSet, c: Computed) -> list[dict]:
 
     sel["high_press"] = episodes(
         eng[(eng["x"] > 0) & (eng["end_type"].notna())].sort_values("t"),
-        lambda r: f"{r['player_name']} — отбор на чужой половине, {r.get('def_phase','')}", 60)
+        lambda r: f"{r['player_name']} — отбор на чужой половине, {r.get('def_phase', '')}",
+        60,
+    )
 
     sel["counter_press"] = episodes(
         eng[eng["subtype"] == "counter_press"].sort_values("t"),
-        lambda r: f"Контрпрессинг — {r['player_name']}, {r.get('def_phase','')}", 60)
+        lambda r: f"Контрпрессинг — {r['player_name']}, {r.get('def_phase', '')}",
+        60,
+    )
 
     sel["run_behind"] = episodes(
         runs[runs["subtype"] == "behind"].sort_values("t"),
-        lambda r: f"Забегание за спину — {r['player_name']}"
-                  + (", адресовано" if r.get("targeted") else ", передачи не последовало"), 60)
+        lambda r: (
+            f"Забегание за спину — {r['player_name']}"
+            + (", адресовано" if r.get("targeted") else ", передачи не последовало")
+        ),
+        60,
+    )
 
     sel["line_break"] = episodes(
         own[own["furthest_line_break"] == "last"].sort_values("t"),
-        lambda r: f"Взлом последней линии — {r['player_name']}, {r.get('phase','')}", 60)
+        lambda r: f"Взлом последней линии — {r['player_name']}, {r.get('phase', '')}",
+        60,
+    )
 
     sw = own[(own["end_type"] == "pass") & ((own["y_end"] - own["y"]).abs() > 25)]
     sel["switch"] = episodes(
         sw.sort_values("t"),
-        lambda r: f"Смена фланга — {r['player_name']}, {abs(r['y_end']-r['y']):.0f} м поперёк", 60)
+        lambda r: f"Смена фланга — {r['player_name']}, {abs(r['y_end'] - r['y']):.0f} м поперёк",
+        60,
+    )
 
     sel["loss_own_third"] = episodes(
-        own[(own["end_type"] == "possession_loss") &
-            (own["third_start"] == "defensive_third")].sort_values("t"),
-        lambda r: f"Потеря в своей трети — {r['player_name']}", 60)
+        own[
+            (own["end_type"] == "possession_loss") & (own["third_start"] == "defensive_third")
+        ].sort_values("t"),
+        lambda r: f"Потеря в своей трети — {r['player_name']}",
+        60,
+    )
 
     sel["corner"] = episodes(
         own[own["game_interruption_before"] == "corner_for"].sort_values("t"),
-        lambda r: f"Угловой — {r['player_name']}"
-                  + (" → удар" if r.get("lead_to_shot") else ""), 60)
+        lambda r: f"Угловой — {r['player_name']}" + (" → удар" if r.get("lead_to_shot") else ""),
+        60,
+    )
 
     if not ph.empty:
         low = ph[(ph["team_id"] != tid) & (ph["def_phase"] == "низкий блок")]
         sel["low_block"] = phase_episodes(
             low.sort_values("t"),
-            lambda r: f"Низкий блок {r['duration']:.0f} с, ширина {r['width_out']:.0f} м", 60)
+            lambda r: f"Низкий блок {r['duration']:.0f} с, ширина {r['width_out']:.0f} м",
+            60,
+        )
         qb = ph[(ph["team_id"] == tid) & (ph["phase"].isin(["быстрый выпад", "переход"]))]
         sel["quick_break"] = phase_episodes(
             qb.sort_values("t"),
-            lambda r: f"{r['phase']} — {r['duration']:.0f} с"
-                      + (" → удар" if r.get("lead_to_shot") else ""), 60)
+            lambda r: (
+                f"{r['phase']} — {r['duration']:.0f} с"
+                + (" → удар" if r.get("lead_to_shot") else "")
+            ),
+            60,
+        )
 
     sel["cross"] = episodes(
         runs[runs["subtype"] == "cross_receiver"].sort_values("t"),
-        lambda r: f"Открывание под навес — {r['player_name']}", 60)
+        lambda r: f"Открывание под навес — {r['player_name']}",
+        60,
+    )
 
     sel["shot"] = episodes(
         own[own["end_type"] == "shot"].sort_values("t"),
-        lambda r: f"Удар — {r['player_name']}, {r.get('phase','')}", 60)
+        lambda r: f"Удар — {r['player_name']}, {r.get('phase', '')}",
+        60,
+    )
 
     out = []
     for p in PATTERNS:
@@ -168,6 +220,7 @@ def _build_patterns(ms: MatchSet, c: Computed) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
+
 
 def _capability_matrix(ms: MatchSet, c: Computed) -> list[dict]:
     """Что посчитано, что недоступно и от чего это зависит.
@@ -182,14 +235,16 @@ def _capability_matrix(ms: MatchSet, c: Computed) -> list[dict]:
         need = [r.value for r in spec.requires]
         missing = [r.value for r in spec.requires if r not in caps]
         value = c.get(key)
-        rows.append({
-            "title": spec.title,
-            "section": spec.section,
-            "requires": need,
-            "status": "нет данных" if missing else ("посчитано" if value else "пусто"),
-            "missing": missing,
-            "note": spec.note,
-        })
+        rows.append(
+            {
+                "title": spec.title,
+                "section": spec.section,
+                "requires": need,
+                "status": "нет данных" if missing else ("посчитано" if value else "пусто"),
+                "missing": missing,
+                "note": spec.note,
+            }
+        )
     return rows
 
 
@@ -216,8 +271,9 @@ class Report:
         return asdict(self)
 
 
-def build_report(ms: MatchSet, bl: Baseline, *, club: str, club_short: str,
-                 generated: str) -> Report:
+def build_report(
+    ms: MatchSet, bl: Baseline, *, club: str, club_short: str, generated: str
+) -> Report:
     c = compute_all(ms)
     ins = build_insights(c, bl, ms.subject_team.name)
 
@@ -225,24 +281,29 @@ def build_report(ms: MatchSet, bl: Baseline, *, club: str, club_short: str,
     for m in ms.matches:
         opp = m.opponent_of(ms.subject_team.id)
         home = m.home.id == ms.subject_team.id
-        gf, ga = (m.score if home else (m.score[1], m.score[0]))
-        matches.append({
-            "id": m.id,
-            "date": m.date,
-            "opponent": opp.short_name,
-            "venue": "дома" if home else "в гостях",
-            "score": f"{gf}:{ga}",
-            "result": "П" if gf > ga else ("Н" if gf == ga else "Пор"),
-            "label": m.label(),
-        })
+        gf, ga = m.score if home else (m.score[1], m.score[0])
+        matches.append(
+            {
+                "id": m.id,
+                "date": m.date,
+                "opponent": opp.short_name,
+                "venue": "дома" if home else "в гостях",
+                "score": f"{gf}:{ga}",
+                "result": "П" if gf > ga else ("Н" if gf == ga else "Пор"),
+                "label": m.label(),
+            }
+        )
 
     baseline = {
         "n_teams": bl.n_teams,
         "n_matches": bl.n_matches,
         "rows": [
-            {"key": k, "label": SCALARS[k][2],
-             "median": round(v, 2),
-             "team": round(team_value, 2) if team_value is not None else None}
+            {
+                "key": k,
+                "label": SCALARS[k][2],
+                "median": round(v, 2),
+                "team": round(team_value, 2) if team_value is not None else None,
+            }
             for k, v, team_value in (
                 (k, v, bl.by_team.get(ms.subject_team.short_name, {}).get(k))
                 for k, v in bl.median.items()

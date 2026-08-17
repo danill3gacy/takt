@@ -53,6 +53,7 @@ def computed(ms):
 # переворачивает половину выводов.
 # --------------------------------------------------------------------------- #
 
+
 def test_own_goalkeeper_is_at_own_goal(ms):
     ev = ms.events()
     own = on_ball(ev, ms.subject_team.id)
@@ -63,8 +64,7 @@ def test_own_goalkeeper_is_at_own_goal(ms):
 
 def test_opponent_goalkeeper_is_at_opposite_goal(ms):
     ev = ms.events()
-    opp = ev[(ev["type"] == "player_possession") &
-             (ev["possession_team_id"] != ms.subject_team.id)]
+    opp = ev[(ev["type"] == "player_possession") & (ev["possession_team_id"] != ms.subject_team.id)]
     gk = opp[opp["position"] == "GK"]
     assert len(gk) > 20
     assert gk["x"].mean() > 25, "вратарь соперника после сведения к нашей системе — справа"
@@ -93,8 +93,7 @@ def test_frame_of_is_an_involution(ms):
     m = ms.matches[0]
     a = m.frame_of(ms.subject_team.id)
     b = m.frame_of(m.opponent_of(ms.subject_team.id).id)
-    merged = a[["event_id", "x"]].merge(b[["event_id", "x"]], on="event_id",
-                                        suffixes=("_a", "_b"))
+    merged = a[["event_id", "x"]].merge(b[["event_id", "x"]], on="event_id", suffixes=("_a", "_b"))
     flipped = merged[merged["x_a"].notna() & merged["x_b"].notna()]
     assert ((flipped["x_a"] + flipped["x_b"]).abs() < 1e-6).mean() > 0.99
 
@@ -103,16 +102,20 @@ def test_frame_of_is_an_involution(ms):
 # Независимый пересчёт из сырого CSV
 # --------------------------------------------------------------------------- #
 
+
 def test_shot_count_matches_raw_csv(src, ms):
     """Число ударов в отчёте совпадает с прямым подсчётом по CSV."""
     tid = ms.subject_team.id
     expected = 0
     for m in ms.matches:
-        raw = pd.read_csv(DATA / "matches" / m.id / f"{m.id}_dynamic_events.csv",
-                          low_memory=False)
-        expected += int(((raw["event_type"] == "player_possession") &
-                         (raw["team_id"] == tid) &
-                         (raw["end_type"] == "shot")).sum())
+        raw = pd.read_csv(DATA / "matches" / m.id / f"{m.id}_dynamic_events.csv", low_memory=False)
+        expected += int(
+            (
+                (raw["event_type"] == "player_possession")
+                & (raw["team_id"] == tid)
+                & (raw["end_type"] == "shot")
+            ).sum()
+        )
     c = compute_all(ms, strict=True)
     assert c["shots"]["total"] == expected
 
@@ -121,11 +124,14 @@ def test_runs_behind_matches_raw_csv(ms):
     tid = ms.subject_team.id
     expected = 0
     for m in ms.matches:
-        raw = pd.read_csv(DATA / "matches" / m.id / f"{m.id}_dynamic_events.csv",
-                          low_memory=False)
-        expected += int(((raw["event_type"] == "off_ball_run") &
-                         (raw["team_id"] == tid) &
-                         (raw["event_subtype"] == "behind")).sum())
+        raw = pd.read_csv(DATA / "matches" / m.id / f"{m.id}_dynamic_events.csv", low_memory=False)
+        expected += int(
+            (
+                (raw["event_type"] == "off_ball_run")
+                & (raw["team_id"] == tid)
+                & (raw["event_subtype"] == "behind")
+            ).sum()
+        )
     c = compute_all(ms, strict=True)
     assert c["off_ball_runs"]["behind"] == expected
 
@@ -136,13 +142,15 @@ def test_defensive_line_height_is_from_opponent_possessions(ms, computed):
     assert 5 < dl["mean"] < 70
     assert dl["p25"] < dl["mean"] < dl["p75"]
     heights = {r["phase"]: r["height"] for r in dl["by_phase"]}
-    assert heights["высокий блок"] > heights["низкий блок"], \
+    assert heights["высокий блок"] > heights["низкий блок"], (
         "в высоком блоке линия обязана стоять выше, чем в низком"
+    )
 
 
 # --------------------------------------------------------------------------- #
 # Осмысленность значений
 # --------------------------------------------------------------------------- #
+
 
 def test_ppda_in_plausible_range(computed):
     assert 0.5 < computed["ppda"]["value"] < 60
@@ -173,6 +181,7 @@ def test_every_player_row_has_minutes(computed):
 # --------------------------------------------------------------------------- #
 # Контракт продукта
 # --------------------------------------------------------------------------- #
+
 
 def test_every_insight_has_clips(ms, computed, all_matches):
     bl = build_baseline(all_matches)
@@ -218,9 +227,11 @@ def test_baseline_covers_league(all_matches):
 def test_report_json_is_serialisable(ms, all_matches):
     from takt.render import _clean
     from takt.report import build_report
+
     bl = build_baseline(all_matches)
-    rep = build_report(ms, bl, club="ФК «Динамо» Москва", club_short="Д",
-                       generated="4 августа 2026")
+    rep = build_report(
+        ms, bl, club="ФК «Динамо» Москва", club_short="Д", generated="4 августа 2026"
+    )
     payload = json.dumps(_clean(rep.to_dict()), ensure_ascii=False, allow_nan=False)
     assert len(payload) > 100_000
     assert "NaN" not in payload

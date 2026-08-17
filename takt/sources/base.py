@@ -14,22 +14,24 @@ from ..model import Capability, Match
 
 # Обязательные колонки канонической таблицы событий.
 CANONICAL_EVENT_COLUMNS = [
-    "event_id",          # уникальный id события
-    "period",            # 1 | 2 | ...
-    "minute",            # минута матча (0-based)
+    "event_id",  # уникальный id события
+    "period",  # 1 | 2 | ...
+    "minute",  # минута матча (0-based)
     "second",
-    "t",                 # секунды от начала матча
-    "frame",             # кадр видео — точка входа в клип
+    "t",  # секунды от начала матча
+    "frame",  # кадр видео — точка входа в клип
     "frame_end",
-    "team_id",           # команда игрока-субъекта события
+    "team_id",  # команда игрока-субъекта события
     "player_id",
     "player_name",
     "position",
     "possession_team_id",  # команда, владеющая мячом в этот момент
-    "type",              # player_possession | on_ball_engagement | off_ball_run | passing_option
+    "type",  # player_possession | on_ball_engagement | off_ball_run | passing_option
     "subtype",
-    "x", "y",            # начало, метры, атака слева направо для владеющей команды
-    "x_end", "y_end",
+    "x",
+    "y",  # начало, метры, атака слева направо для владеющей команды
+    "x_end",
+    "y_end",
 ]
 
 

@@ -22,7 +22,7 @@ def _clean(obj: Any) -> Any:
         return [_clean(v) for v in obj]
     if isinstance(obj, float):
         return None if (math.isnan(obj) or math.isinf(obj)) else obj
-    if hasattr(obj, "item"):          # numpy-скаляры
+    if hasattr(obj, "item"):  # numpy-скаляры
         try:
             return _clean(obj.item())
         except Exception:  # noqa: BLE001
@@ -39,8 +39,9 @@ def render_html(report: Report, out_path: str | Path) -> Path:
     data = _clean(report.to_dict())
     html = tpl.render(
         r=report,
-        data_json=json.dumps(data, ensure_ascii=False, allow_nan=False)
-        .replace("</script>", "<\\/script>"),
+        data_json=json.dumps(data, ensure_ascii=False, allow_nan=False).replace(
+            "</script>", "<\\/script>"
+        ),
     )
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
