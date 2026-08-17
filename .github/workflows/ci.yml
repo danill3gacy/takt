@@ -1,8 +1,4 @@
-name: checks
-
-# Полный прогон pytest требует выгрузки SkillCorner в data/skillcorner/data,
-# её нет в репозитории — поэтому в CI проверяются импорты и компиляция,
-# а тесты запускаются локально после подключения данных.
+name: tests
 
 on:
   push:
@@ -11,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  checks:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,8 +22,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy jinja2
-      - name: Compile
-        run: python -m compileall -q takt tests
-      - name: Import check
-        run: python -c "import takt.cli, takt.report, takt.insights, takt.metrics; print('импорт ок')"
+          pip install -r requirements.txt
+          pip install pytest
+      - name: Fetch open demo data
+        run: git clone --depth 1 https://github.com/SkillCorner/opendata.git data/skillcorner
+      - name: Run tests
+        run: pytest -q
+      - name: Build a report end-to-end
+        run: python -m takt.cli report --team "Auckland FC" --out out/report.html
