@@ -6,13 +6,20 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 from ..model import Capability as C
 from ..model import MatchSet
-from .common import (CHANNEL_ORDER, CHANNEL_RU, RUN_RU, episodes, off_ball_runs,
-                     on_ball, passing_options, share)
+from .common import (
+    CHANNEL_ORDER,
+    CHANNEL_RU,
+    RUN_RU,
+    episodes,
+    off_ball_runs,
+    on_ball,
+    passing_options,
+    share,
+)
 from .registry import metric
 
 

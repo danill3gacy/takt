@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
-import pandas as pd
 
 from ..model import Capability as C
 from ..model import MatchSet
-from .common import (CHANNEL_ORDER, CHANNEL_RU, THIRD_ORDER, THIRD_RU, episodes,
-                     on_ball, phase_episodes, share)
+from .common import episodes, phase_episodes, share
 from .registry import metric
 
 DEF_PHASE_ORDER = ["высокий блок", "средний блок", "низкий блок",
@@ -151,11 +151,10 @@ def avg_positions(ms: MatchSet) -> dict:
     if own.empty:
         return {}
 
-    minutes = {p.id: p.minutes for m in ms.matches for p in m.players.values()}
     names = {p.id: p.name for m in ms.matches for p in m.players.values()}
     positions = {p.id: p.position for m in ms.matches for p in m.players.values()}
 
-    nodes = []
+    nodes: list[dict[str, Any]] = []
     for pid, g in own.groupby("player_id"):
         if len(g) < 25:
             continue

@@ -5,14 +5,11 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-import numpy as np
-import pandas as pd
-
 from .baseline import SCALARS, Baseline
-from .insights import Insight, build_insights
+from .insights import build_insights
 from .metrics import REGISTRY, Computed, compute_all
-from .metrics.common import CHANNEL_RU, RUN_RU, episodes, phase_episodes
-from .model import Capability, MatchSet
+from .metrics.common import episodes, phase_episodes
+from .model import MatchSet
 
 # --------------------------------------------------------------------------- #
 # Поиск по тактическим паттернам
@@ -245,9 +242,11 @@ def build_report(ms: MatchSet, bl: Baseline, *, club: str, club_short: str,
         "rows": [
             {"key": k, "label": SCALARS[k][2],
              "median": round(v, 2),
-             "team": round(bl.by_team.get(ms.subject_team.short_name, {}).get(k), 2)
-             if bl.by_team.get(ms.subject_team.short_name, {}).get(k) is not None else None}
-            for k, v in bl.median.items()
+             "team": round(team_value, 2) if team_value is not None else None}
+            for k, v, team_value in (
+                (k, v, bl.by_team.get(ms.subject_team.short_name, {}).get(k))
+                for k, v in bl.median.items()
+            )
         ],
     }
 

@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import numpy as np
-import pandas as pd
+from typing import Any
 
 from ..model import Capability as C
 from ..model import MatchSet
-from .common import RUN_RU, engagements, episodes, off_ball_runs, on_ball
+from .common import engagements, episodes, off_ball_runs, on_ball
 from .registry import metric
 
 
@@ -34,7 +33,7 @@ def player_table(ms: MatchSet) -> dict:
     runs = off_ball_runs(ev, tid)
     eng = engagements(ev, tid)
 
-    rows = []
+    rows: list[dict[str, Any]] = []
     for pid, mins in minutes.items():
         if mins < 60:  # меньше 60 минут суммарно — статистика не читается
             continue

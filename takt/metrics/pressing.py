@@ -2,13 +2,23 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 from ..model import Capability as C
 from ..model import MatchSet
-from .common import (CHANNEL_ORDER, CHANNEL_RU, PRESS_RU, THIRD_ORDER, THIRD_RU,
-                     engagements, episodes, on_ball, opponent_on_ball, share, zone_grid)
+from .common import (
+    CHANNEL_ORDER,
+    CHANNEL_RU,
+    PRESS_RU,
+    THIRD_ORDER,
+    THIRD_RU,
+    engagements,
+    episodes,
+    on_ball,
+    opponent_on_ball,
+    share,
+    zone_grid,
+)
 from .registry import metric
 
 

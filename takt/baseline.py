@@ -111,12 +111,13 @@ def build_baseline(matches: list[Match], min_matches: int = 1) -> Baseline:
                 vals[key] = v
         per_team[teams[tid].short_name] = vals
 
-    median, spread = {}, {}
+    median: dict[str, float] = {}
+    spread: dict[str, float] = {}
     for key in SCALARS:
-        vals = [v[key] for v in per_team.values() if key in v]
-        if len(vals) >= 3:
-            median[key] = statistics.median(vals)
-            q = sorted(vals)
+        series = [v[key] for v in per_team.values() if key in v]
+        if len(series) >= 3:
+            median[key] = statistics.median(series)
+            q = sorted(series)
             lo = statistics.median(q[: len(q) // 2])
             hi = statistics.median(q[(len(q) + 1) // 2:])
             spread[key] = max(hi - lo, 1e-6)

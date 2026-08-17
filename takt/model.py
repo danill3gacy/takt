@@ -19,7 +19,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 import pandas as pd
 
@@ -73,8 +72,8 @@ class Player:
     id: int
     name: str
     team_id: int
-    number: Optional[int] = None
-    position: Optional[str] = None
+    number: int | None = None
+    position: str | None = None
     minutes: float = 0.0
 
 

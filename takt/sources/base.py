@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Iterable
+from collections.abc import Iterable
 
 from ..model import Capability, Match
 

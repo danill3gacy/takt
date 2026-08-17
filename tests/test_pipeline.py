@@ -17,7 +17,7 @@ import pytest
 from takt.baseline import build_baseline
 from takt.insights import build_insights
 from takt.metrics import compute_all
-from takt.metrics.common import engagements, on_ball
+from takt.metrics.common import on_ball
 from takt.model import Capability, MatchSet
 from takt.sources.skillcorner import SkillCornerSource
 

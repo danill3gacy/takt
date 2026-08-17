@@ -2,14 +2,25 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
-import pandas as pd
 
 from ..model import Capability as C
 from ..model import MatchSet
-from .common import (CHANNEL_ORDER, CHANNEL_RU, END_RU, SET_PIECE_RU, THIRD_ORDER,
-                     THIRD_RU, episodes, on_ball, opponent_on_ball, phase_episodes,
-                     share, zone_grid)
+from .common import (
+    CHANNEL_ORDER,
+    CHANNEL_RU,
+    SET_PIECE_RU,
+    THIRD_ORDER,
+    THIRD_RU,
+    episodes,
+    on_ball,
+    opponent_on_ball,
+    phase_episodes,
+    share,
+    zone_grid,
+)
 from .registry import metric
 
 
@@ -260,7 +271,7 @@ def time_profile(ms: MatchSet) -> dict:
 
     own, opp = bucketize(own), bucketize(opp)
     labels = ["0–15", "15–30", "30–45", "45–60", "60–75", "75–90"]
-    rows = []
+    rows: list[dict[str, Any]] = []
     for i, lab in enumerate(labels):
         o = own[own["bucket"] == i]
         d = opp[opp["bucket"] == i]
@@ -274,7 +285,8 @@ def time_profile(ms: MatchSet) -> dict:
         })
     peak = max(rows, key=lambda r: r["xthreat"])
     vuln = max(rows, key=lambda r: r["xthreat_against"])
-    pi = labels.index(peak["bucket"]); vi = labels.index(vuln["bucket"])
+    pi = labels.index(peak["bucket"])
+    vi = labels.index(vuln["bucket"])
     return {
         "rows": rows,
         "clips_peak": episodes(
